@@ -1,0 +1,5 @@
+venv/
+__pyache__/
+*.venv
+*.venv.*
+venv.*
