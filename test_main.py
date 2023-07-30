@@ -3,6 +3,7 @@ from fastapi.testclient import TestClient
 from unittest.mock import patch
 from main import app, get_posts, add_post, user_login, verify_token
 
+
 class TestApp(unittest.TestCase):
 
     def setUp(self):
@@ -20,7 +21,6 @@ class TestApp(unittest.TestCase):
             self.assertEqual(response.json(), {"data": self.posts})
 
     def test_user_login_valid_credentials(self):
-
         user_data = {"email": "test@example.com", "password": "password123"}
         with patch('main.check_user', return_value=True):
             response = self.client.post("/user/login", json=user_data)
@@ -28,7 +28,7 @@ class TestApp(unittest.TestCase):
             self.assertEqual(response.json()["user"], user_data)
 
     def test_user_login_invalid_credentials(self):
-        user_data = {"email": "test@example.com", "password": "password123"}
+        user_data = {"email": "test@example.com", "password": "wrongpassword"}
         with patch('main.check_user', return_value=False):
             response = self.client.post("/user/login", json=user_data)
             self.assertEqual(response.status_code, 200)

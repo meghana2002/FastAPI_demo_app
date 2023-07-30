@@ -30,7 +30,7 @@ def decodeJWT(token: str):
         decode_token = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
         if 'exp' in decode_token and 'email' in decode_token:
             # check if iat and exp are valid
-            if decode_token['exp'] >= int(time.time()) >= decode_token['iat']:
+            if decode_token['exp'] >= int(time.time()):
                 print("Token is valid")
                 return True
         else:

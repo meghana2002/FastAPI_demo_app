@@ -6,7 +6,6 @@
 - [About](#about)
 - [Getting Started](#getting_started)
 - [Usage](#usage)
-- [Contributing](../CONTRIBUTING.md)
 
 ## About <a name = "about"></a>
 
@@ -66,19 +65,19 @@ Running the Application in a Docker Container
 To run the application in a Docker container, ensure that you have Docker installed and running on your machine. Then, follow these steps:
 
 ```
-sudo docker build -t myfastapi
+docker build -t myfastapi2 .
 
 ```
 
 Run the docker container:
 ```
-sudo docker run -p 8000:8000 myfastapi
+docker run -p 8000:8000 myfastapi2
 
 ```
 The FastAPI application will now be accessible at http://localhost:8000.
 
 
-## Usage <a name = "usage"></a>
+### Usage <a name = "usage"></a>
 
 To access the API endpoint, make a POST request to http://localhost:8000/api/dictionary with a valid JWT token passed in the Authorization header as a bearer token.
 
@@ -109,6 +108,3 @@ pytest tests/
 ```
 The unit tests include mocked authentication to simulate both authenticated and unauthenticated scenarios.
 
-Contributing
-
-If you'd like to contribute to this project, please follow the guidelines in CONTRIBUTING.md. We welcome contributions and appreciate any feedback or suggestions!

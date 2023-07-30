@@ -1,16 +1,41 @@
 import uvicorn
 from fastapi import FastAPI, Body, Depends
 from fastapi import Request, HTTPException, Header
-
+from sqlalchemy import Column, BIGINT, String
+from db_setup import *
 from app.model import PostSchema
 from app.model import UserSchema
 from app.model import UserLoginSchema
 from app.auth.jwt_bearer import jwtBearer
 from app.auth.jwt_handler import signJWT, decodeJWT
-
 from fastapi import Depends, Header
 
 app = FastAPI()
+
+
+# Create a base class for declarative class definitions
+Base = declarative_base()
+
+# Define the table class
+class PostDetails(Base):
+    __tablename__ = "post_details"
+    id = Column(BIGINT, primary_key=True)
+    title = Column(String)
+    text = Column(String)
+
+class UserDetails(Base):
+    __tablename__ = "user_details"
+    name = Column(String)
+    email = Column(String, primary_key=True, nullable=False)
+    password = Column(String)
+
+
+# Create the table
+Base.metadata.create_all(engine)
+
+# Optional:session to interact with the database
+Session = sessionmaker(bind=engine)
+session = Session()
 
 posts = [
     {
@@ -113,6 +138,20 @@ def verify_token(token: str):
     return {
         "valid": False
     }
+
+@app.get("/user/verify-token", tags=['user'])
+def verify_token(token: str):
+    if token:
+        decoded_token = decodeJWT(token)
+        if decoded_token:
+            return{
+                "valid":True,
+                "user":decoded_token
+            }
+    return{
+        "valid":False
+    }
+
 
 #if __name__ == "__main__":
     #uvicorn.run(app, host="0.0.0.0", port=8080)
