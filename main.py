@@ -87,21 +87,40 @@ def add_post(post: PostSchema, authorization: str = Header(...)):
     if not bearer.verify_jwt(authorization):
         raise HTTPException(status_code=401, detail="Invalid token")
 
-    post_id = len(posts) + 1
-    post.id = post_id
-    posts.append(post.dict())
+    # Create a new PostDetails instance from the post data
+    new_post = PostDetails(title=post.title, text=post.text)
+
+    # Add the new_post to the session and commit it to the database
+    session.add(new_post)
+    session.commit()
+
     return {
         "info": "Post Added!",
-        "data": post.dict()
+        "data": {
+            "id": new_post.id,
+            "title": new_post.title,
+            "text": new_post.text
+        }
     }
 
 # User Signup
 @app.post("/user/signup", tags=["user"])
 def user_signup(user: UserSchema = Body(default=None)):
-    users.append(user)
+    # Create a new UserDetails instance from the user data
+    new_user = UserDetails(name=user.fullname, email=user.email, password=user.password)
+
+    # Add the new_user to the session and commit it to the database
+    session.add(new_user)
+    session.commit()
+
+    # Generate a JWT token for the user
     token = signJWT(user.email)
+
     return {
-        "user": user,
+        "user": {
+            "name": new_user.name,
+            "email": new_user.email
+        },
         "access_token": token
     }
 
